@@ -1,7 +1,7 @@
 
 import 'dart:developer';
 import 'package:budgetly/constants/colors.dart';
-import 'package:budgetly/controller/localdb.dart';
+import 'package:budgetly/functions/localdb.dart';
 import 'package:budgetly/model/localdb.dart';
 import 'package:budgetly/view/login&register/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +24,7 @@ class UserController extends ChangeNotifier {
   // 🔐 Login Function
   Future<String?> loginUser({
     required String email,
-    required String password,
+    required String password,  
     BuildContext? context,
   }) async {
     try {

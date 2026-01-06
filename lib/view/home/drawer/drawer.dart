@@ -2,15 +2,16 @@ import 'package:budgetly/backup/backup.dart';
 import 'package:budgetly/constants/colors.dart';
 import 'package:budgetly/controller/dataController.dart';
 import 'package:budgetly/controller/login.dart';
-import 'package:budgetly/view/Monthlydata/printmonth.dart';
+import 'package:budgetly/decoration/decoration.dart';
+import 'package:budgetly/view/home/drawer/Monthlydata/printmonth.dart';
 import 'package:budgetly/view/Settings/settingss.dart';
 import 'package:budgetly/view/about/about.dart';
 import 'package:budgetly/view/account/accounts.dart';
+import 'package:budgetly/view/home/drawer/drawer_widget.dart';
 import 'package:budgetly/view/privacypoli.dart/privacy.dart';
 import 'package:budgetly/view/totelscreentime/screentime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 Drawer drawer({BuildContext? context, String? company, String? phone}) {
   return Drawer(
@@ -61,15 +62,9 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
-                  company ?? 'Company Name',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
-                  ),
-                ),
+
+                text(company ?? 'Company Name', Colors.white, 22, FontWeight.bold),
+                
                 const SizedBox(height: 5),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -77,14 +72,9 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Text(
-                    phone ?? '+91 0000000000',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
+
+               child:   text(phone ?? '+91 0000000000', Colors.white, 14,  FontWeight.w500,),
+                  
                 ),
               ],
             ),
@@ -97,14 +87,14 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
              
               
               children: [
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.groups_outlined,
                   title: "Accounts",
                   onTap: () => Navigator.push(context!,
                       MaterialPageRoute(builder: (context) => AccountsPage())),
                   iconColor: Colors.blue,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.settings,
                   title: "Settings",
                   onTap: () {
@@ -113,7 +103,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   },
                   iconColor: Colors.grey[700],
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.privacy_tip_outlined,
                   title: "Privacy Policy",
                   onTap: () {
@@ -124,7 +114,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   },
                   iconColor: Colors.green,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.picture_as_pdf,
                   title: "Monthly Report PDF",
                   onTap: () async {
@@ -147,13 +137,9 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                                   color: Appcolors.backgroundblue,
                                 ),
                                 SizedBox(height: 15),
-                                Text(
-                                  'Select Month',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                
+                                text('Select Month', Colors.black, 20, FontWeight.bold),
+                                
                                 SizedBox(height: 20),
                                 StatefulBuilder(
                                   builder: (context, setState) {
@@ -247,7 +233,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   
                     if (selectedMonth != null) {
                       final datacontroller =
-                          Provider.of<Datacontroller>(context!, listen: false);
+                          Provider.of<Datacontroller>(context, listen: false);
                   
                       await datacontroller.getdata('Monthly', selectedMonth);
                   
@@ -260,7 +246,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   },
                   iconColor: Colors.red,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.screen_lock_portrait,
                   title: 'Screen Time',
                   onTap: () => Navigator.push(
@@ -269,7 +255,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   ),
                   iconColor: Colors.purple,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.cloud_upload,
                   title: 'Cloud Backup',
                   onTap: () => Navigator.push(
@@ -278,7 +264,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   ),
                   iconColor: Colors.teal,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.info_outline,
                   title: "About",
                   onTap: () {
@@ -296,7 +282,7 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
                   indent: 20,
                   endIndent: 20,
                 ),
-                _buildDrawerItem(
+                buildDrawerItem(
                   icon: Icons.logout,
                   title: "Logout",
                   onTap: () {
@@ -354,60 +340,3 @@ Drawer drawer({BuildContext? context, String? company, String? phone}) {
   );
 }
 
-Widget _buildDrawerItem({
-  required IconData icon,
-  required String title,
-  required VoidCallback onTap,
-  Color? iconColor,
-  bool showTrailing = true,
-}) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: (iconColor ?? Colors.grey).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  icon,
-                  size: 24,
-                  color: iconColor ?? Colors.grey[700],
-                ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ),
-              if (showTrailing)
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[400],
-                ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}

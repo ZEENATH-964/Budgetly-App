@@ -67,6 +67,11 @@ dependencies:
   printing: ^5.14.2
   gap: ^3.0.1
   math_expressions: ^2.7.0
+  curved_navigation_bar: ^1.0.6
+  google_nav_bar: ^5.0.7
+  file_picker: ^10.3.8
+  excel: ^4.0.6
+  syncfusion_flutter_pdf: ^31.1.19
   
 
 dev_dependencies:

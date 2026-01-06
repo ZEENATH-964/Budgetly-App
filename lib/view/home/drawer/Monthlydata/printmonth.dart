@@ -1,70 +1,7 @@
-// import 'package:flutter/material.dart';
-// import 'package:pdf/pdf.dart';
-// import 'package:pdf/widgets.dart' as pw;
-// import 'package:printing/printing.dart';
-// import 'package:provider/provider.dart';
-// import 'package:shersoft/controller/dataController.dart';
 
-// Future<void> generateMonthlyPdfReport(BuildContext context) async {
-//   final pdf = pw.Document();
-
-//   // Access your filtered monthly data from provider
-//   final dataProvider = Provider.of<Datacontroller>(context, listen: false);
-//   final dataList = dataProvider.filteredData;
-
-//   // Build the PDF content
-//   pdf.addPage(
-//     pw.MultiPage(
-//       pageFormat: PdfPageFormat.a4,
-//       build: (context) {
-//         return [
-//           pw.Center(
-//             child: pw.Text('Monthly  Report',
-//                 style:
-//                     pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-//           ),
-//           pw.SizedBox(height: 20),
-//           pw.Table.fromTextArray(
-//             headers: ['Date', 'Particular', 'Cash In', 'Cash Out'],
-//             data: dataList.map((data) {
-//               return [
-//                 data.date ?? '',
-//                 data.particular ?? '',
-//                 data.cashIn ?? '0',
-//                 data.cashout ?? '0'
-//               ];
-//             }).toList(),
-//             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-//             cellAlignment: pw.Alignment.centerLeft,
-//             headerDecoration: pw.BoxDecoration(color: PdfColors.blue100),
-//             cellHeight: 25,
-//             cellAlignments: {
-//               0: pw.Alignment.centerLeft,
-//               1: pw.Alignment.centerLeft,
-//               2: pw.Alignment.centerRight,
-//               3: pw.Alignment.centerRight,
-//             },
-//           ),
-//           pw.SizedBox(height: 20),
-//           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
-//             pw.Text('Total Cash: ₹${dataProvider.totalCash.toStringAsFixed(2)}',
-//                 style:
-//                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16))
-//           ]),
-//         ];
-//       },
-//     ),
-//   );
-
-//   // Convert PDF to bytes
-//   final pdfBytes = await pdf.save();
-
-//   // Share the PDF file
-//   await Printing.sharePdf(bytes: pdfBytes, filename: 'MonthlyReport.pdf');
-// }
-//................
 import 'package:budgetly/controller/dataController.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -110,7 +47,8 @@ Future<void> generateMonthlyPdfReport(
             headers: ['Date', 'Particular', 'Cash In', 'Cash Out'],
             data: dataList.map((data) {
               return [
-                data.date ?? '',
+                DateFormat('dd MMM yyyy').format(data.createdAt),
+
                 data.particular ?? '',
                 data.cashIn ?? '0',
                 data.cashout ?? '0'
@@ -132,7 +70,7 @@ Future<void> generateMonthlyPdfReport(
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.Text(
-                'Total Cash: ₹${dataProvider.totalCash.toStringAsFixed(2)}',
+                'Total Cash: ₹${dataProvider.totalCash().toStringAsFixed(2)}',
                 style:
                     pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 16),
               ),

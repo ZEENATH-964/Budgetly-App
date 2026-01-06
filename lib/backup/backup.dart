@@ -34,13 +34,10 @@ class CloudBackupService {
           .doc(transaction.id)
           .set({
         'id': transaction.id,
-        'date': transaction.date,
-        'time': transaction.time,
-        'day': transaction.day,
+        'createdAt': Timestamp.fromDate(transaction.createdAt),
         'particular': transaction.particular,
         'cashIn': transaction.cashIn,
         'cashOut': transaction.cashout,
-        'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -64,13 +61,10 @@ class CloudBackupService {
 
         batch.set(docRef, {
           'id': transaction.id,
-          'date': transaction.date,
-          'time': transaction.time,
-          'day': transaction.day,
+            'createdAt': Timestamp.fromDate(transaction.createdAt),
           'particular': transaction.particular,
           'cashIn': transaction.cashIn,
           'cashOut': transaction.cashout,
-          'createdAt': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
         });
       }
@@ -99,9 +93,7 @@ class CloudBackupService {
         'transactions': transactions
             .map((t) => {
                   'id': t.id,
-                  'date': t.date,
-                  'time': t.time,
-                  'day': t.day,
+                  'createdAt': t.createdAt.toIso8601String(),
                   'particular': t.particular,
                   'cashIn': t.cashIn,
                   'cashOut': t.cashout,
@@ -158,14 +150,13 @@ class CloudBackupService {
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
         return Datamodel(
-          id: data['id'],
-          date: data['date'],
-          time: data['time'],
-          day: data['day'],
-          particular: data['particular'],
-          cashIn: data['cashIn'],
-          cashout: data['cashOut'],
-        );
+  id: data['id'],
+  createdAt: (data['createdAt'] as Timestamp).toDate(),
+  particular: data['particular'],
+  cashIn: data['cashIn'],
+  cashout: data['cashOut'],
+);
+
       }).toList();
     } catch (e) {
       throw Exception('Restore failed: $e');

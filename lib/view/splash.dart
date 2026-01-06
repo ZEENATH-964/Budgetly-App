@@ -1,4 +1,5 @@
-import 'package:budgetly/view/home/homepage.dart';
+import 'package:budgetly/view/bottom/bottom.dart';
+
 import 'package:budgetly/view/login&register/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (user != null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Homepage()),
+        MaterialPageRoute(builder: (context) => BottomNavScreen()),
       );
     } else {
       Navigator.pushReplacement(

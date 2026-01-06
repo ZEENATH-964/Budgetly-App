@@ -4,6 +4,7 @@ import 'package:budgetly/controller/dataController.dart';
 import 'package:budgetly/controller/login.dart';
 import 'package:budgetly/controller/them.dart';
 import 'package:budgetly/firebase_options.dart';
+import 'package:budgetly/model/import_transactiondb.dart';
 import 'package:budgetly/model/localdb.dart';
 import 'package:budgetly/view/splash.dart';
 import 'package:budgetly/view/totelscreentime/screentime.dart';
@@ -25,6 +26,12 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(UserAcoountDbAdapter());
+  await Hive.openBox<UserAcoountDb>('user-db');
+  Hive.registerAdapter(ImportTransactiondbAdapter());
+  await Hive.openBox<ImportTransactiondb>('import_transactions');
+
+
+
   FirebaseMessaging.instance.onTokenRefresh.listen(updateFcmToken);
   runApp(const MyApp());
 }
