@@ -215,3 +215,34 @@ String? selectedCategory;
     },
   );
 }
+
+
+
+void showDeleteDialog({
+  required BuildContext context,
+  required String title,
+  required String message,
+  required VoidCallback onConfirm,
+}) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        TextButton(
+          child: const Text("Cancel"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        TextButton(
+          child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          onPressed: () {
+            Navigator.pop(context);
+            onConfirm();
+          },
+        ),
+      ],
+    ),
+  );
+}
+

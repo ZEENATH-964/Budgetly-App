@@ -2,7 +2,7 @@ class Datamodel {
   final String? id;
   final String? cashIn;
   final String? cashout;
-  final DateTime createdAt;   // ⭐ IMPORTANT
+  final DateTime createdAt;
   final String? uid;
   final String? particular;
   final String? category;
@@ -20,7 +20,7 @@ class Datamodel {
   Map<String, dynamic> toJson() => {
         'cashIn': cashIn,
         'cashout': cashout,
-        'createdAt': createdAt.toIso8601String(), // ⭐
+        'createdAt': createdAt.toIso8601String(),
         'uid': uid,
         'particular': particular,
         'category': category,
@@ -31,7 +31,7 @@ class Datamodel {
       id: id,
       cashIn: json['cashIn'],
       cashout: json['cashout'],
-      createdAt: DateTime.parse(json['createdAt']), // ⭐
+      createdAt: DateTime.parse(json['createdAt']),
       uid: json['uid'],
       particular: json['particular'],
       category: json['category'],

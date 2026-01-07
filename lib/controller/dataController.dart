@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Datacontroller with ChangeNotifier {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+bool selectionMode = false;
+Set<String> selectedIds = {};
 
   List<Datamodel> allData = [];
   List<Datamodel> filteredData = [];
@@ -67,6 +69,17 @@ class Datacontroller with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void enableSelectionMode() {
+  selectionMode = true;
+  notifyListeners();
+}
+void disableSelectionMode() {
+  selectionMode = false;
+  selectedIds.clear();
+  notifyListeners();
+}
+
 
   // ---------------- MAIN FETCH LOGIC ----------------
   Future<List<Datamodel>> fetchData(
@@ -186,21 +199,28 @@ class Datacontroller with ChangeNotifier {
     }
   }
 
-  Set<String> selectedIds = {};
-bool get isSelectionMode => selectedIds.isNotEmpty; 
-void toggleSelection(String id) {
+ void toggleSelection(String id) {
   if (selectedIds.contains(id)) {
     selectedIds.remove(id);
   } else {
     selectedIds.add(id);
   }
+
+ 
+  if (selectedIds.isEmpty) {
+    selectionMode = false;
+  }
+
   notifyListeners();
 }
 
+
 void clearSelection() {
+  selectionMode = false; 
   selectedIds.clear();
   notifyListeners();
 }
+
 
 
   Future<void> deleteAllTransactions() async {

@@ -1,6 +1,7 @@
 import 'package:budgetly/controller/dataController.dart';
 import 'package:budgetly/decoration/decoration.dart';
 import 'package:budgetly/model/dataModel.dart';
+import 'package:budgetly/view/home/homeWidget/dialogue/dilogue.dart';
 import 'package:flutter/material.dart';
 
 import 'package:budgetly/constants/colors.dart';
@@ -71,58 +72,6 @@ class TotalCashCard extends StatelessWidget {
 
 
 
-
-class TransactionItem extends StatelessWidget {
-  final Datamodel data;
-  final VoidCallback onTap;
-  const TransactionItem({Key? key, required this.data, required this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return containers(
-      margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-      color: Colors.white,
-      radius: 12,
-      shadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 4, offset: Offset(0, 2))],
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      text(data.particular ?? 'Transaction', Colors.black87, 16, FontWeight.w600, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      SizedBox(height: 4),
-                      Row(children: [
-                        Icon(Icons.calendar_today, size: 14, color: Colors.grey[500]),
-                        SizedBox(width: 4),
-                        Flexible(child: text(DateFormat('dd MMM yyyy').format(data.createdAt), Colors.grey.shade600, 13, FontWeight.normal, overflow: TextOverflow.ellipsis)),
-                        SizedBox(width: 12),
-                        Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
-                        SizedBox(width: 4),
-                        Flexible(child: text(  DateFormat('hh:mm a').format(data.createdAt), Colors.grey.shade600, 13, FontWeight.normal, overflow: TextOverflow.ellipsis)),
-                      ]),
-                    ],
-                  ),
-                ),
-                Expanded(child: Text('\u20B9${data.cashIn ?? '0'}', textAlign: TextAlign.center, style: TextStyle(color: Appcolors.greencolors, fontSize: 16, fontWeight: FontWeight.bold))),
-                Expanded(child: text('\u20B9${data.cashout ?? '0'}', Appcolors.redcolors, 16, FontWeight.bold, textAlign: TextAlign.center)),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 
 
@@ -197,4 +146,127 @@ class FilterButtons extends StatelessWidget {
       ),
     );
   }
+}
+
+
+
+
+void showAddTransactionDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 🔹 Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text(
+                    "Add Transaction",
+                    Colors.black,
+                    18,
+                    FontWeight.bold,
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close, size: 20),
+                    padding: EdgeInsets.zero,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // 🔹 CASH IN / CASH OUT
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        Navigator.pop(context);
+                        showCashDialog(context, 'Cash In');
+                      },
+                      child: containers(
+                        height: 100,
+                        radius: 12,
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFF30CB76).withOpacity(0.8),
+                            const Color(0xFF30CB76),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.arrow_downward,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                            const SizedBox(height: 8),
+                            text(
+                              "Cash In",
+                              Colors.white,
+                              14,
+                              FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        Navigator.pop(context);
+                        showCashDialog(context, 'Cash Out');
+                      },
+                      child: containers(
+                        height: 100,
+                        radius: 12,
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFFF31717).withOpacity(0.8),
+                            const Color(0xFFF31717),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.arrow_upward,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                            const SizedBox(height: 8),
+                            text(
+                              "Cash Out",
+                              Colors.white,
+                              14,
+                              FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
