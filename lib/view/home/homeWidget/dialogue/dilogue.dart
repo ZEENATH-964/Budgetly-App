@@ -1,4 +1,4 @@
- import 'package:budgetly/decoration/decoration.dart';
+import 'package:budgetly/decoration/decoration.dart';
 import 'package:budgetly/service/import_file_service.dart';
 import 'package:budgetly/view/home/homeWidget/dialogue/date_import_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -179,17 +179,16 @@ String? selectedCategory;
                       const SizedBox(height: 16),
 
                       importExcelButton(
-  onTap: () async {
-    await ImportTransactionFileService().pickAndImportFile();
+ onTap: () async {
+  await ImportTransactionFileService().pickAndImportFile();
 
-    Navigator.pop(context);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text("File imported. Click Add Transaction to save."),
+    ),
+  );
+},
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Transactions imported successfully"),
-      ),
-    );
-  },
 ),
 
 

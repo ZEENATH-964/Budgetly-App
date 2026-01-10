@@ -1,7 +1,9 @@
 import 'package:budgetly/controller/dataController.dart';
 import 'package:budgetly/controller/login.dart';
 import 'package:budgetly/model/dataModel.dart';
+import 'package:budgetly/model/import_transactiondb.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 //dropdown
@@ -194,7 +196,38 @@ Widget actionButtons({
         // -------- ADD TRANSACTION --------
         Expanded(
           child: ElevatedButton(
-            onPressed: () async {
+      onPressed: () async {
+  final dataController =
+      Provider.of<Datacontroller>(context, listen: false);
+
+  final importBox =
+      Hive.box<ImportTransactiondb>('import_transactions');
+
+  final uid =
+      Provider.of<UserController>(context, listen: false).uid;
+
+  if (uid == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("User not logged in")),
+    );
+    return;
+  }
+
+  // 🔹 CASE 1: IMPORT DATA EXISTS → COMMIT IMPORT
+  if (importBox.isNotEmpty) {
+    await dataController.syncImportedTransactionsFromHive();
+
+    Navigator.pop(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Imported transactions added"),
+      ),
+    );
+    return;
+  }
+
+  // 🔹 CASE 2: MANUAL ADD
   final amount = amountController.text.trim();
 
   if (amount.isEmpty) {
@@ -204,48 +237,39 @@ Widget actionButtons({
     return;
   }
 
-  final uid = Provider.of<UserController>(context, listen: false).uid;
-  if (uid == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("User not logged in")),
+  DateTime now = DateTime.now();
+  DateTime finalDate;
+
+  if (dateController.text.isNotEmpty) {
+    final pickedDate =
+        DateFormat('dd-MM-yyyy').parse(dateController.text);
+
+    finalDate = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      now.hour,
+      now.minute,
+      now.second,
     );
-    return;
+  } else {
+    finalDate = now;
   }
 
-  DateTime now = DateTime.now();
-DateTime finalDate;
-
-if (dateController.text.isNotEmpty) {
-  final pickedDate =
-      DateFormat('dd-MM-yyyy').parse(dateController.text);
-
-  finalDate = DateTime(
-    pickedDate.year,
-    pickedDate.month,
-    pickedDate.day,
-    now.hour,
-    now.minute,
-    now.second,
-  );
-} else {
-  finalDate = now;
-}
   final data = Datamodel(
-  cashIn: transactionType == 'Cash In' ? amount : '0',
-  cashout: transactionType == 'Cash Out' ? amount : '0',
-  createdAt: finalDate,
-  particular: particularController.text.trim(),
-  category: selectedCategory ?? 'Others',
-  uid: uid,
-);
+    cashIn: transactionType == 'Cash In' ? amount : '0',
+    cashout: transactionType == 'Cash Out' ? amount : '0',
+    createdAt: finalDate,
+    particular: particularController.text.trim(),
+    category: selectedCategory ?? 'Others',
+    uid: uid,
+  );
 
-  await Provider.of<Datacontroller>(
-    context,
-    listen: false,
-  ).addDatafireBase(data: data);
+  await dataController.addDatafireBase(data: data);
 
   Navigator.pop(context);
 },
+
 
             style: ElevatedButton.styleFrom(
               backgroundColor: transactionType == 'Cash In'
@@ -266,7 +290,7 @@ if (dateController.text.isNotEmpty) {
               ),
             ),
           ),
-        ),
+        ),   
       ],
     ),
   );

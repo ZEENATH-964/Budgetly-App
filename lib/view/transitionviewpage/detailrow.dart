@@ -43,12 +43,15 @@ Widget detailRow(String title, String value, IconData icon,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                Flexible(
+                  child: Text(
+                    title,
+                        overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Text(

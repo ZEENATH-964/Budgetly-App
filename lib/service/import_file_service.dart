@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:budgetly/functions/import_trans_function.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:hive/hive.dart';
 import 'package:path/path.dart' as path;
 import '../model/import_transactiondb.dart';
 
@@ -50,7 +50,7 @@ class ImportTransactionFileService {
           pdfPath:file.path 
         );
 
-        addTransaction(model); // Hive function
+   await     _saveToHive(model); // Hive function
       }
     }
   }
@@ -76,7 +76,7 @@ class ImportTransactionFileService {
         pdfPath: file.path,
       );
 
-      addTransaction(model); 
+    await  _saveToHive(model); 
     }
   }
 
@@ -96,8 +96,14 @@ class ImportTransactionFileService {
     pdfPath: file.path, // IMPORTANT
   );
 
-  addTransaction(model);
+await  _saveToHive(model);
 }
+
+Future<void> _saveToHive(ImportTransactiondb model) async {
+  final box = Hive.box<ImportTransactiondb>('import_transactions');
+  await box.add(model);
+}
+
 
 }
 

@@ -1,6 +1,5 @@
 import 'package:budgetly/controller/dataController.dart';
 import 'package:budgetly/decoration/decoration.dart';
-import 'package:budgetly/model/dataModel.dart';
 import 'package:budgetly/view/home/homeWidget/dialogue/dilogue.dart';
 import 'package:flutter/material.dart';
 

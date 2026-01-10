@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:budgetly/model/dataModel.dart';
+import 'package:budgetly/model/import_transactiondb.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -137,6 +139,43 @@ void disableSelectionMode() {
 
   return allDocs;
 }
+Future<void> syncImportedTransactionsFromHive() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+
+  final box = Hive.box<ImportTransactiondb>('import_transactions');
+  if (box.isEmpty) return;
+
+  WriteBatch batch = firestore.batch();
+
+  for (var hiveData in box.values) {
+    final data = Datamodel(
+      cashIn: hiveData.cashIn,
+      cashout: hiveData.cashOut,
+      particular: hiveData.particular,
+      category: hiveData.category,
+      createdAt: DateTime.now(),
+      uid: user.uid,
+    );
+
+    final docRef = firestore
+        .collection('cash_book')
+        .doc(user.uid)
+        .collection('transactions')
+        .doc();
+
+    batch.set(docRef, {
+      ...data.toJson(),
+      'id': docRef.id,
+    });
+  }
+
+  await batch.commit(); // 🔥 ONE network call
+  await box.clear();
+  await getdata(); // UI rebuild
+}
+
+
 
 
   // ---------------- ADD ----------------

@@ -218,7 +218,7 @@ class _HomepageState extends State<Homepage>
               Consumer<Datacontroller>(
                 builder: (context, controller, _) {
                   if (!controller.selectionMode) {
-                    return const SizedBox(); // ❌ hide normally
+                    return const SizedBox();
                   }
 
                   return Padding(
